@@ -1,8 +1,28 @@
+import { Outlet } from "react-router-dom";
+import Header from '../common/Header';
+// import '../../assets/materialize/css/materialize.min.css';
+// import '../../assets/css/bootstrap.css';
+// import '../../assets/css/font-awesome.css';
+// import '../../assets/js/morris/morris-0.4.3.min.css';
+// import '../../assets/css/custom-styles.css';
+// import '../../assets/js/Lightweight-Chart/cssCharts.css';
 
-let Header=()=>{
+// import '../../assets/js/jquery-1.10.2';
+// import '../../assets/js/bootstrap.min.js';
+// //import '../../assets/materialize/js/materialize.min.js';
+// import '../../assets/js/jquery.metisMenu.js';
+
+// //import '../../assets/js/morris/raphael-2.1.0.min.js';
+//  import '../../assets/js/morris/morris.js';
+// // import '../../assets/js/easypiechart.js';
+// // import '../../assets/js/easypiechart-data.js';
+//  import '../../assets/js/Lightweight-Chart/jquery.chart.js';
+// // import '../../assets/js/custom-scripts.js';
+let AdminLayout=()=>{
     return (
-        <>
-            <nav className="navbar navbar-default top-navbar" role="navigation">
+        <div>
+            <div id="wrapper">
+                 <nav className="navbar navbar-default top-navbar" role="navigation">
 			<div className="navbar-header">
 				<button type="button" className="navbar-toggle waves-effect waves-dark" data-toggle="collapse"
 					data-target=".sidebar-collapse">
@@ -30,9 +50,10 @@ let Header=()=>{
 							className="material-icons right">arrow_drop_down</i></a></li>
 			</ul>
 		</nav>
-            
-        </>
+                <Outlet />
+            </div>
+        </div>
     )
 }
 
-export default Header;
+export default AdminLayout;
