@@ -1,6 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 let Header = () => {
+	let navigate=useNavigate();
+	let logout = () => {
+		localStorage.removeItem("userInfo");
+		navigate('/');
+	}
   return (
     <div>
  
@@ -134,7 +139,7 @@ let Header = () => {
 									<h6>Mintrona Pechon</h6><span>Premium Member</span>
 								</div>
 								<Link className="dropdown-item" to="/admin/profile"><i className="far fa-user"></i> My Profile</Link>
-								<Link className="dropdown-item" to="/"><i className="fas fa-sign-out-alt"></i> Sign Out</Link>
+								<a className="dropdown-item" href="#" onClick={logout}><i className="fas fa-sign-out-alt"></i> Sign Out</a>
 							</div>
 						</div>
 					</div>

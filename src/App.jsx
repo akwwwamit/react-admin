@@ -18,6 +18,7 @@ import CartList from "./pages/carts/CartList";
 import CommentsList from "./pages/comments/CommentsList";
 import TodosList from "./pages/todos/TodosList";
 import QuotesList from "./pages/quotes/QuotesList";
+import AuthGuard from "./guard/AuthGuard";
 
 function App() {
   return (
@@ -30,18 +31,20 @@ function App() {
       </Route>
 
       {/* Admin Pages */}
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Dashboard />} /> {/* /admin -> dashboard */}
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="products" element={<ProductLists />} />
-        <Route path="recipes" element={<RecipesList />} />
-        <Route path="users" element={<UsersList />} />
-        <Route path="posts" element={<PostsList />} />
-        <Route path="carts" element={<CartList />} />
-        <Route path="comments" element={<CommentsList />} />
-        <Route path="todos" element={<TodosList />} />
-        <Route path="quotes" element={<QuotesList />} />
+      <Route element={<AdminLayout />}>
+        <Route path="/admin" element={<AuthGuard />}>
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="products" element={<ProductLists />} />
+          <Route path="recipes" element={<RecipesList />} />
+          <Route path="users" element={<UsersList />} />
+          <Route path="posts" element={<PostsList />} />
+          <Route path="carts" element={<CartList />} />
+          <Route path="comments" element={<CommentsList />} />
+          <Route path="todos" element={<TodosList />} />
+          <Route path="quotes" element={<QuotesList />} />
+        </Route>
       </Route>
 
       {/* Catch-all redirect */}
