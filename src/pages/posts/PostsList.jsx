@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
@@ -7,9 +7,25 @@ let PostsList=()=>{
     let [posts, setPosts] =useState([]);
     const [loading, setLoading] = useState(true);
 
+    let [search, setSearch] = useState("");
+    const timerRef = useRef(null);
+    let searchData=(event)=>{
+        const value = event.target.value;
+
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+        setSearch(value); 
+        }, 500);
+    }
+
     let getPostsList = async () => {
         try {
-            await fetch("https://dummyjson.com/posts").then((res)=>{
+            let url = "https://dummyjson.com/posts?limit=500";
+            if(search){
+                url = "https://dummyjson.com/posts/search?limit=500&q="+encodeURIComponent(search);
+            }
+            
+            await fetch(url).then((res)=>{
                 return res.json();
             }).then((data)=>{
                 console.log(data);
@@ -23,7 +39,7 @@ let PostsList=()=>{
 
     useEffect(()=>{
         getPostsList();
-    },[]);
+    },[search]);
 
     return (
         <div>
@@ -49,6 +65,11 @@ let PostsList=()=>{
 							<div className="card-header pb-0 pd-t-25">
 								<div className="d-flex justify-content-between">
 									<h4 className="card-title mg-b-0">Posts List</h4>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <input type="text" className="form-control" placeholder="Search..." onChange={searchData}/>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 							<div className="card-body">

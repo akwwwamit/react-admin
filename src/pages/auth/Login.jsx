@@ -14,14 +14,17 @@ let Login=()=>{
 
     let validateForm = () => {
         let flag=true;
-        if(formData.username.trim()===""){
-            setFormError({...formError, username: "Please enter your username"});
-            flag=false;
+        let errors = {};
+        if (formData.username.trim() === "") {
+            errors.username = "Please enter your username";
+            flag = false;
         }
-        if(formData.password.trim()===""){
-            setFormError({...formError, password: "Please enter your password"});
-            flag=false;
+
+        if (formData.password.trim() === "") {
+            errors.password = "Please enter your password";
+            flag = false;
         }
+       setFormError(errors);
         return flag;
     }
 
@@ -64,9 +67,11 @@ let Login=()=>{
                     <form onSubmit={handleSubmit} method="POST">
                         <div className="form-group">
                             <label>Username</label><input className="form-control" placeholder="Enter your username" type="text" value={formData.username} name="username" onChange={(e)=>handleChange(e)}/>
+                            <span className="text-danger">{formError.username}</span>
                         </div>
                         <div className="form-group">
                             <label>Password</label> <input className="form-control" placeholder="Enter your password" type="password" value={formData.password} name="password" onChange={(e)=>handleChange(e)}/>
+                            <span className="text-danger">{formError.password}</span>
                         </div>
                         <button type="submit" disabled={processing} className="btn btn-main-primary btn-block">Sign In</button>
                         

@@ -1,15 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
 let ProductLists=()=>{
 
     let [products, setProducts] =useState([]);
+    let [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
 
-    let getProductsList = async () => {
+    const timerRef = useRef(null);
+    let searchData=(event)=>{
+        const value = event.target.value;
+
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+        setSearch(value); 
+        }, 500);
+    }
+
+    let getProductsList = async (searchValue='') => {
         try {
-            await fetch("https://dummyjson.com/products?limit=500").then((res)=>{
+            let url = "https://dummyjson.com/products?limit=500";
+            if(searchValue){
+                url = "https://dummyjson.com/products/search?limit=500&q="+encodeURIComponent(searchValue);
+            }
+            await fetch(url).then((res)=>{
                 return res.json();
             }).then((data)=>{
                 setLoading(false);
@@ -21,8 +36,8 @@ let ProductLists=()=>{
     };
 
     useEffect(()=>{
-        getProductsList();
-    },[]);
+        getProductsList(search);
+    },[search]);
 
     return (
         <div>
@@ -48,6 +63,11 @@ let ProductLists=()=>{
 							<div className="card-header pb-0 pd-t-25">
 								<div className="d-flex justify-content-between">
 									<h4 className="card-title mg-b-0">Products List</h4>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <input type="text" className="form-control" placeholder="Search..." onChange={searchData}/>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 							<div className="card-body">
@@ -76,7 +96,7 @@ let ProductLists=()=>{
                                                         ))}
                                                     </tr>
                                                 ))
-                                                : products.map((product) => (
+                                                : products.length ? products.map((product) => (
                                                     <tr key={product.id}>
                                                         <td>{product.title}</td>
                                                         <td>{product.price}</td>
@@ -93,7 +113,8 @@ let ProductLists=()=>{
                                                         />
                                                         </td>
                                                     </tr>
-                                                    ))}
+                                                    ))
+                                                : <tr><td colSpan="8">Sorry no record found to display.</td></tr>}
 											
 										</tbody>
 									</table>
