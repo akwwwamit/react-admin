@@ -66,11 +66,13 @@ let Login=()=>{
                     <h4>Please sign in to continue</h4>
                     <form onSubmit={handleSubmit} method="POST">
                         <div className="form-group">
-                            <label>Username</label><input className="form-control" placeholder="Enter your username" type="text" value={formData.username} name="username" onChange={(e)=>handleChange(e)}/>
+                            <label>Username<span className="text-danger">*</span></label>
+                            <input className="form-control" placeholder="Enter your username" type="text" value={formData.username} name="username" onChange={(e)=>handleChange(e)}/>
                             <span className="text-danger">{formError.username}</span>
                         </div>
                         <div className="form-group">
-                            <label>Password</label> <input className="form-control" placeholder="Enter your password" type="password" value={formData.password} name="password" onChange={(e)=>handleChange(e)}/>
+                            <label>Password<span className="text-danger">*</span></label>
+                            <input className="form-control" placeholder="Enter your password" type="password" value={formData.password} name="password" onChange={(e)=>handleChange(e)}/>
                             <span className="text-danger">{formError.password}</span>
                         </div>
                         <button type="submit" disabled={processing} className="btn btn-main-primary btn-block">Sign In</button>

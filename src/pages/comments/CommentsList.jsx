@@ -31,17 +31,6 @@ let CommentsList=()=>{
                 <title>Comments List</title>
             </Helmet>
             <div className="container">
-                 <div className="breadcrumb-header justify-content-between">	
-                    <div className="left-content">
-                        <h4 className="content-title mb-1">Comments List</h4>
-                        <nav aria-label="breadcrumb">
-                            <ol className="breadcrumb">
-                                <li className="breadcrumb-item"><Link to="/admin/dashboard">Dashboard</Link></li>
-                                <li className="breadcrumb-item active" aria-current="page">Comments List</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
 
                 <div className="row">
                     <div className="col-xl-12">

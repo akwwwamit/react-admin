@@ -5,19 +5,6 @@ let Dashboard=()=>{
         <>
          
             <div className="container">
-
-                <div className="breadcrumb-header justify-content-between mg-lg-t-0 mg-lg-b-50">
-					<div className="left-content">
-						<h4 className="content-title mb-2">Hi, welcome back!</h4>
-						<nav aria-label="breadcrumb">
-							<ol className="breadcrumb">
-								<li className="breadcrumb-item"><a href="#">Dashboard</a></li>
-								<li className="breadcrumb-item active" aria-current="page">Analytics &amp; Monitoring</li>
-							</ol>
-						</nav>
-					</div>
-				</div>
-
                 <div className="row row-sm">
                     <div className="col-sm-4">
                         <div className="card">
