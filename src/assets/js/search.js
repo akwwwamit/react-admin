@@ -3,14 +3,16 @@ $(function () {
 
     $("#search-input").inputDropdown(
         [
-            { name: "Orders", value: "jQueryScript" },
-            { name: "Earnings", value: "jQuery" },
-            { name: "Customers", value: "Angular" },
-            { name: "Total sales", value: "React" },
-            { name: "Profits", value: "Vue" },
-            { name: "Tasks", value: "JavaScript" },
-            { name: "New projects", value: "CSS" },
-            { name: "Total sellers", value: "HTML" }
+            { name: "Dashboard", value: "Dashboard" },
+            { name: "Profile", value: "Profile" },
+            { name: "Products", value: "Products" },
+            { name: "Recipes", value: "Recipes" },
+            { name: "Users", value: "Users" },
+            { name: "Posts", value: "Posts" },
+            { name: "Carts", value: "Carts" },
+            { name: "Comments", value: "Comments" },
+            { name: "Todos", value: "Todos" },
+            { name: "Quotes", value: "Quotes" }
         ],
         {
             formatter: function (e) {

@@ -1,8 +1,39 @@
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 let ProductLists=()=>{
+
+   const handleDelete = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to recover this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteItem(id);
+            }
+        });
+        };
+
+    let deleteItem = (id) => {
+        fetch(`https://dummyjson.com/products/${id}`, {
+            method: "DELETE",
+        }).then((res) => {
+            return res.json();
+        }
+        ).then((data) => {
+            if (data?.id) {
+                Swal.fire("Deleted!", "Product has been deleted.", "success");
+                setProducts(products.filter((product) => product.id !== id));
+            }
+        }).catch((error) => {
+            console.error("Error deleting product:", error);
+        });
+    }
 
     let [products, setProducts] =useState([]);
     let [search, setSearch] = useState("");
@@ -51,7 +82,12 @@ let ProductLists=()=>{
 						<div className="card mg-b-20">
 							<div className="card-header pb-0 pd-t-25">
 								<div className="d-flex justify-content-between">
-									<h4 className="card-title mg-b-0">Products List</h4>
+									<h4 className="card-title mg-b-0">Products List &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <Link to="/admin/add-product">
+                                            <input type="button" className="btn btn-primary btn-sm" value="Add Product"/>
+                                        </Link>
+                                    </h4>
+                                    
                                     <div className="row">
                                         <div className="col-md-12">
                                             <input type="text" className="form-control" placeholder="Search..." onChange={searchData}/>
@@ -72,13 +108,14 @@ let ProductLists=()=>{
 												<th>Rating</th>
 												<th>Stock</th>
 												<th>Image</th>
+												<th style={{minWidth:"130px"}}>Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											{loading
                                                 ? Array.from({ length: 3 }).map((_, idx) => (
                                                     <tr key={idx}>
-                                                        {Array.from({ length: 8 }).map((_, cellIdx) => (
+                                                        {Array.from({ length: 9 }).map((_, cellIdx) => (
                                                         <td key={cellIdx}>
                                                             <div className="skeleton"></div>
                                                         </td>
@@ -101,9 +138,16 @@ let ProductLists=()=>{
                                                             style={{ width: "30px", height: "30px" }}
                                                         />
                                                         </td>
+                                                        <td>
+                                                            <Link to={`/admin/products/${product.id}`}>
+                                                                <input type="button" className="btn btn-info btn-sm" value="Edit"/>
+                                                            </Link>
+                                                             &nbsp;
+                                                            <input type="button" className="btn btn-danger btn-sm" value="Delete" onClick={()=>handleDelete(product.id)}/>
+                                                        </td>
                                                     </tr>
                                                     ))
-                                                : <tr><td colSpan="8">Sorry no record found to display.</td></tr>}
+                                                : <tr><td colSpan="9">Sorry no record found to display.</td></tr>}
 											
 										</tbody>
 									</table>

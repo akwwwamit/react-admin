@@ -18,7 +18,7 @@
       position: absolute;
       top: ${targetPosition.top + this.height() + 7}px;
       left: ${targetPosition.left}px;
-      overflow-y: scroll;
+      overflow-y: scroll !important;
       max-height: ${settings.maxHeight};
       color: ${settings.color};
       font-size: ${settings.fontSize};
