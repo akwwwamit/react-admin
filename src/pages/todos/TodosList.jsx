@@ -42,7 +42,6 @@ let TodosList=()=>{
     const timerRef = useRef(null);
     let searchData=(event)=>{
         const value = event.target.value;
-        console.log(value);
         clearTimeout(timerRef.current);
         timerRef.current = setTimeout(() => {
         setSearch(value); 
@@ -52,15 +51,17 @@ let TodosList=()=>{
     let getTodosList = async () => {
         try {
             let url = "https://dummyjson.com/todos?limit=500";
-            if(search){
-                url = "https://dummyjson.com/todos?limit=500&q="+encodeURIComponent(search);
-            }
-
             await fetch(url).then((res)=>{
                 return res.json();
             }).then((data)=>{
                 setLoading(false);
-                setTodos(data.todos);
+                 if (search) {
+                    const filtered=data.todos.filter(item =>item.todo.toLowerCase().includes(search.toLowerCase()));
+                    setTodos(filtered);
+                    console.log(search);
+                }else {
+                    setTodos(data.todos);
+                }
             });
         } catch (error) {
             console.error("Error fetching todos:", error);
@@ -69,7 +70,7 @@ let TodosList=()=>{
 
     useEffect(()=>{
         getTodosList();
-    },[]);
+    },[search]);
 
     return (
         <div>
@@ -117,7 +118,7 @@ let TodosList=()=>{
                                                         ))}
                                                     </tr>
                                                 ))
-                                                : todos.map((todo) => (
+                                                : todos.length>0 ? todos.map((todo) => (
                                                     <tr key={todo.id}>
                                                         <td>{todo.todo}</td>
                                                         <td>{todo.completed ? "Yes" : "No"}</td>
@@ -129,7 +130,7 @@ let TodosList=()=>{
                                                             <input type="button" className="btn btn-danger btn-sm" value="Delete" onClick={()=>handleDelete(todo.id)}/>
                                                         </td>
                                                     </tr>
-                                                    ))
+                                                    )) : <tr><td colSpan={3}>Sorry no record found to display.</td></tr>
                                                 }
 											
 										</tbody>

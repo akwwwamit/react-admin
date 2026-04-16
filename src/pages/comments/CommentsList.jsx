@@ -43,7 +43,6 @@ let CommentsList=()=>{
         const timerRef = useRef(null);
         let searchData=(event)=>{
             const value = event.target.value;
-            console.log(value);
             clearTimeout(timerRef.current);
             timerRef.current = setTimeout(() => {
             setSearch(value); 
@@ -53,14 +52,16 @@ let CommentsList=()=>{
     let getCommentsList = async () => {
         try {
             let url = "https://dummyjson.com/comments?limit=500";
-            if(search){
-                url = "https://dummyjson.com/comments?limit=500&q="+encodeURIComponent(search);
-            }
             await fetch(url).then((res)=>{
                 return res.json();
             }).then((data)=>{
                 setLoading(false);
-                setComments(data.comments);
+                if (search) {
+                    const filtered=data.comments.filter(item =>item.body.toLowerCase().includes(search.toLowerCase()));
+                    setComments(filtered); 
+                }else {
+                    setComments(data.comments);
+                }
             });
         } catch (error) {
             console.error("Error fetching comments:", error);
