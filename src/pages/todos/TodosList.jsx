@@ -1,18 +1,64 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 let TodosList=()=>{
 
     let [todos, setTodos] =useState([]);
     const [loading, setLoading] = useState(true);
 
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to recover this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteItem(id);
+            }
+        });
+        };
+
+    let deleteItem = (id) => {
+        fetch(`https://dummyjson.com/todos/${id}`, {
+            method: "DELETE",
+        }).then((res) => {
+            return res.json();
+        }
+        ).then((data) => {
+            if (data?.id) {
+                Swal.fire("Deleted!", "Todo has been deleted.", "success");
+                setTodos(todos.filter((todo) => todo.id !== id));
+            }
+        }).catch((error) => {
+            console.error("Error deleting user :", error);
+        });
+    }
+
+    let [search, setSearch] = useState("");
+    const timerRef = useRef(null);
+    let searchData=(event)=>{
+        const value = event.target.value;
+        console.log(value);
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => {
+        setSearch(value); 
+        }, 500);
+    }
+
     let getTodosList = async () => {
         try {
-            await fetch("https://dummyjson.com/todos?limit=500").then((res)=>{
+            let url = "https://dummyjson.com/todos?limit=500";
+            if(search){
+                url = "https://dummyjson.com/todos?limit=500&q="+encodeURIComponent(search);
+            }
+
+            await fetch(url).then((res)=>{
                 return res.json();
             }).then((data)=>{
-                console.log(data);
                 setLoading(false);
                 setTodos(data.todos);
             });
@@ -36,7 +82,17 @@ let TodosList=()=>{
 						<div className="card mg-b-20">
 							<div className="card-header pb-0 pd-t-25">
 								<div className="d-flex justify-content-between">
-									<h4 className="card-title mg-b-0">Posts List</h4>
+									<h4 className="card-title mg-b-0">Todos List
+                                         &nbsp;&nbsp;&nbsp;
+                                        <Link to="/admin/add-todo">
+                                            <input type="button" className="btn btn-primary btn-sm" value="Add Todo"/>
+                                        </Link>
+                                    </h4>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <input type="text" className="form-control" placeholder="Search..." onChange={searchData}/>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 							<div className="card-body">
@@ -46,6 +102,7 @@ let TodosList=()=>{
 											<tr>
 												<th>Todo</th>
 												<th>Completed</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -53,7 +110,7 @@ let TodosList=()=>{
                                             loading
                                                 ? Array.from({ length: 3 }).map((_, idx) => (
                                                     <tr key={idx}>
-                                                        {Array.from({ length: 2 }).map((_, cellIdx) => (
+                                                        {Array.from({ length: 3 }).map((_, cellIdx) => (
                                                         <td key={cellIdx}>
                                                             <div className="skeleton"></div>
                                                         </td>
@@ -64,6 +121,13 @@ let TodosList=()=>{
                                                     <tr key={todo.id}>
                                                         <td>{todo.todo}</td>
                                                         <td>{todo.completed ? "Yes" : "No"}</td>
+                                                        <td>
+                                                            <Link to={`/admin/todo/${todo.id}`}>
+                                                                <input type="button" className="btn btn-info btn-sm" value="Edit"/>
+                                                            </Link>
+                                                             &nbsp;
+                                                            <input type="button" className="btn btn-danger btn-sm" value="Delete" onClick={()=>handleDelete(todo.id)}/>
+                                                        </td>
                                                     </tr>
                                                     ))
                                                 }

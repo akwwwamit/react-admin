@@ -1,11 +1,45 @@
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 let UsersList=()=>{
 
     let [users, setUsers] =useState([]);
     const [loading, setLoading] = useState(true);
+
+    //going to delete user.
+    const handleDelete = (id) => {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to recover this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteItem(id);
+                    }
+                });
+                };
+        
+            let deleteItem = (id) => {
+                fetch(`https://dummyjson.com/users/${id}`, {
+                    method: "DELETE",
+                }).then((res) => {
+                    return res.json();
+                }
+                ).then((data) => {
+                    if (data?.id) {
+                        Swal.fire("Deleted!", "User has been deleted.", "success");
+                        setUsers(users.filter((user) => user.id !== id));
+                    }
+                }).catch((error) => {
+                    console.error("Error deleting user :", error);
+                });
+            }
+
+
 
     let [search, setSearch] = useState("");
     const timerRef = useRef(null);
@@ -52,7 +86,12 @@ let UsersList=()=>{
 						<div className="card mg-b-20">
 							<div className="card-header pb-0 pd-t-25">
 								<div className="d-flex justify-content-between">
-									<h4 className="card-title mg-b-0">Users List</h4>
+									<h4 className="card-title mg-b-0">Users List
+                                         &nbsp;&nbsp;&nbsp;
+                                        <Link to="/admin/add-user">
+                                            <input type="button" className="btn btn-primary btn-sm" value="Add User"/>
+                                        </Link>
+                                    </h4>
                                     <div className="row">
                                         <div className="col-md-12">
                                             <input type="text" className="form-control" placeholder="Search..." onChange={searchData}/>
@@ -72,6 +111,7 @@ let UsersList=()=>{
 												<th>Phone</th>
 												<th>Role</th>
 												<th>Image</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -101,9 +141,16 @@ let UsersList=()=>{
                                                             style={{ width: "30px", height: "30px" }}
                                                         />
                                                         </td>
+                                                        <td>
+                                                            <Link to={`/admin/user/${usr.id}`}>
+                                                                <input type="button" className="btn btn-info btn-sm" value="Edit"/>
+                                                            </Link>
+                                                             &nbsp;
+                                                            <input type="button" className="btn btn-danger btn-sm" value="Delete" onClick={()=>handleDelete(usr.id)}/>
+                                                        </td>
                                                     </tr>
                                                     ))
-                                                    : <tr><td colSpan="7">Sorry no record found to display.</td></tr>
+                                                    : <tr><td colSpan="8">Sorry no record found to display.</td></tr>
                                                 }
 											
 										</tbody>
